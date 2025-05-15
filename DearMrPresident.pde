@@ -13,6 +13,7 @@ boolean zoomNote=false;
 boolean rdrawer=false;
 boolean ldrawer=false;
 boolean glasses=false;
+boolean wheelText=true;
 int spin=52;
 int background=250;
 int glassesIndex=0;
@@ -63,8 +64,16 @@ void draw(){
     if(glassesIndex>0){
       decryptedPaper="";
       for(int i=0;i<paper.length();i++){
-        if(!paper.substring(i,i+1).matches("[a-zA-Z]+")){
-          
+        if(paper.substring(i,i+1).matches("[a-zA-Z]+")){
+          for(int j=0;j<RALP.length;j++){
+            if(paper.substring(i,i+1).toLowerCase().equals(RALP[j].toLowerCase())){
+              if(paper.substring(i,i+1).equals(RALP[j])){
+                decryptedPaper+=decrypt[j].toUpperCase();
+              }else{
+                decryptedPaper+=decrypt[j];
+              }
+            }
+          }
         }else{
           decryptedPaper+=paper.substring(i,i+1);
         }
@@ -104,10 +113,10 @@ void draw(){
     }
     text(spin%26+1,400,270);
     text("Caesar Cipher\nWheel",400,320);
+    fill(250);
     if(glasses){
-      fill(250);
       textSize(20);
-      if(glassesIndex<RALP.length-1){
+      if(glassesIndex<RALP.length){
         text("Input the decrypted letter corresponding to: "+RALP[glassesIndex],400,50);
         text(t,400,100);
       }else{
@@ -115,6 +124,12 @@ void draw(){
       }
     }
     text("To decrypt a letter, find it on the inside of the wheel.\nThe letter on the outside wheel is the plaintext letter.",400,530);
+    if(wheelText){
+      text("Spin the wheel using the\nleft and right arrow keys",680,300);
+    }
+    if(glassesIndex==26){
+      text("If you want to reset the\ndecoder, press \".\"",70,300);
+    }
   }else if(zoomNote){
     background(120,64,0);
     fill(200,170,80);
@@ -139,8 +154,21 @@ void draw(){
     text("~~~~~~~~~~~~.~~~~~~~~~~~~~~.~~~~~~~~,\n~~~~.~NEW PRESIDENT SWORN IN~~\n~~~~~~~~~~~~~~~'~~~~~~~~~~~~~~~~.~\n~~~~~~INAUGURATION SPEECH~~~~~~~~~~~\n~~~~~~~.January 8th~~~~~~~~~~~~\n~~~~~~~~~~~,~~~~~~~~~~~,~~~~~~~~~~,~~~~\n~~~~~~~~~~~,~~~~1966~~~~\n~~~~~~~.~~~~~~~~~~~~~~~~~~~~~~~~~,~~~~\n~~~~~~~~,~~~~~~~~~~~~~~~~~~~,~~~~~~~\n~~~~~~~~~~~~~~~~~~Cold War~~~~\n~~~~~~~~~~,~~~~~~~~~~.~~~~~~~~~~~.~~~\n~~~~~~~~,~~~~~~~~~~~~~~,~~~~~~~~~~~~~~\n~~~~~~~~~~.~~~~~SPIES EVERYWHERE~~,~~\n~~~~~~~~~~~~~~~,~~~~~~~~~~~~~,~~~~~~~~.",310,250);
     
   }else if(rdrawer){
-    
-    
+    background(0);
+    fill(120,64,0);
+    rect(0,0,800,170);
+    rect(250,170,300,400);
+    fill(200,155,90);
+    rect(270,170,260,380);
+    fill(150,95,0);
+    circle(400,580,40);
+    fill(100);
+    rect(290,230,220,220);
+    fill(65);
+    circle(440,340,90);
+    fill(20);
+    textSize(15);
+    text("PRESIDENTIAL\nVAULT",320,300);
   }
 }
 
@@ -190,6 +218,11 @@ void mouseClicked(){
       ldrawer=false;
       desk=true;
     }
+  }else if(rdrawer){
+    if(mouseX>550||mouseX<250){
+      rdrawer=false;
+      desk=true;
+    }
   }
 }
 
@@ -197,21 +230,25 @@ void keyPressed(){
   if(zoomWheel){
     if(keyCode==RIGHT){
       spin++;
+      wheelText=false;
     }else if(keyCode==LEFT){
       spin--;
+      wheelText=false;
     }else if(key==','){
       if(glasses){
         glasses=false;
       }else{
         glasses=true;
       }
+    }else if(key=='.'){
+      glassesIndex=0;
+      decrypt=new String[26];
     }else if(!(key==ENTER||key==RETURN||key==SHIFT)&&glasses&&t.length()<1){
       t+=key;
       decrypt[glassesIndex]=String.valueOf(key);
     }else if((key==ENTER||key==RETURN)&&glasses){
-      //something
       t="";
-      if(glassesIndex<RALP.length-1){
+      if(glassesIndex<RALP.length){
         glassesIndex++;
       }
     }

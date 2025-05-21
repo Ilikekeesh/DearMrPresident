@@ -6,6 +6,7 @@ String[] decrypt = new String[26];
 String t="";
 String note="Mr. President,\n\nThe paper is in Caesar code. Use the\ndecoder wheel and spin it so the\nsmall number is today's code. We \nexpect a response from you soon.\n\nTo decode the note quicker, press \",\"\nwhile looking at the wheel after\nyou've found the correct code.\n\nP.S. The code is the month and day\nof your inauguration speech";
 String paper="Uvri Di. Givjzuvek,                                                     Nv yrmv efkztvu jfdv ivgfikj fw vjgzferxv nzkyze kyv Nyzkv Yfljv, jf nv riv krbzex vokir givtrlkzfej sp vetipgkzex kyzj cvkkvi. Kyvjv riv czbvcp lewfleuvu svczvwj, slk zk zj r xffu jvtlizkp dvrjliv evmvikyvcvjj.";
+String adfgvxCode="h8a1pyf6i9nlswe5kg7od4uc3tvrb2j0mqxz";
 String decryptedPaper=paper;
 boolean menu=true;
 boolean desk=false;
@@ -25,7 +26,7 @@ int glassesIndex=0;
 int level=1;
 void setup(){
   size(800,600);
-  decrypt=checkDecrypt;
+  decrypt=checkDecrypt; //debug line
 }
 
 void draw(){
@@ -34,6 +35,7 @@ void draw(){
   if(level==2){
     paper="lorem ipsum dolor sit amet";
     decryptedPaper=paper;
+    note="Mr. President,\n\nWe have reason to believe a spy\n broke in and read your last\nletter. They escaped using your\nemergency ejector seat, but we are\ndetermined to track them down.\n\nThis cipher is in ADFGVX.\nUse \",\" again to decode it after\ncalibrating your decoding device.";
   }
   if(menu){
     background(120,64,0);
@@ -71,12 +73,12 @@ void draw(){
       circle(620,220,27);
     }else if(level==2){
       fill(229,222,207);
-      rect(100,100,100,150);
+      rect(100,150,100,150);
       fill(20);
-      line(130,110,130,170);
-      line(170,110,170,170);
-      line(110,130,190,130);
-      line(110,150,190,150);
+      line(130,180,130,240);
+      line(170,180,170,240);
+      line(110,200,190,200);
+      line(110,220,190,220);
     }
     //postit
     fill(200,170,80);
@@ -205,9 +207,34 @@ void draw(){
     textSize(15);
     text("PRESIDENTIAL\nVAULT",320,300);
   }else if(adfgvx){
+    //h8a1pyf6i9nlswe5kg7od4uc3tvrb2j0mqxz
     background(120,64,0);
     fill(229,222,207);
     rect(200,10,400,580);
+    fill(20);
+    textSize(27);
+    for(int i=0;i<6;i++){
+      line(250+50*i,60,250+50*i,460);
+      line(215,110+60*i,550,110+60*i);
+    }
+    text("A",268,93);
+    text("D",318,93);
+    text("F",368,93);
+    text("G",418,93);
+    text("V",468,93);
+    text("X",518,93);
+    text("A",220,150);
+    text("D",220,210);
+    text("F",220,270);
+    text("G",220,330);
+    text("V",220,390);
+    text("X",220,450);
+    textSize(20);
+    for(int i=0;i<6;i++){
+      for(int j=0;j<6;j++){
+        text(adfgvxCode.charAt((6*i)+j),268+50*j,150+60*i);
+      }
+    }
   }
 }
 

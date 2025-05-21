@@ -16,26 +16,33 @@ boolean zoomNote=false;
 boolean rdrawer=false;
 boolean ldrawer=false;
 boolean adfgvx=false;
+boolean adfGlassesOn=false;
 boolean glasses=false;
 boolean wheelText=true;
 boolean hasClicked=false;
 boolean win=false;
+boolean superWin=false;
 int spin=52;
 int background=250;
 int glassesIndex=0;
 int level=1;
+int tick=0;
 void setup(){
   size(800,600);
-  decrypt=checkDecrypt; //debug line
+  //decrypt=checkDecrypt; //debug line
 }
 
 void draw(){
   background(background);
   textAlign(BASELINE);
-  if(level==2){
-    paper="lorem ipsum dolor sit amet";
+  if(level==2&&tick==0){
+    paper="GFFFA FVGXF VGAVV GFFFA DFGFF FDVVD ,AFDA VDFFV GVDAA FFDXA FFAVD DXFFV DVDFF VGAAA FGFVV FFFFD VGXGD XFAVV GGDXF DFFDF FGF,F DFFAF VGFFG VFADF DVFXX FGDVG FFFAF FGXGV VGFFF FDVGX VGAXA VVDDF GDDVF AVDGD FVFFF FAVVD AADFF ADVGD VDFFF AAFDA FF.FD FFGFG DDV'VD FVDVG DFDAA GDFDA VVGGD DADFG XDFFF DVVDV DAADF FAFAA VAXDF FA,GD VGFDAA GDVDA AFFAX AFVGF F,FAD FGDFD GDFDF FXFGV FAVDA FFAFA GVXFF FVDAA FFAXF DDFDX DXVGF FAFGF VDAAD FFA.";
     decryptedPaper=paper;
     note="Mr. President,\n\nWe have reason to believe a spy\n broke in and read your last\nletter. They escaped using your\nemergency ejector seat, but we are\ndetermined to track them down.\n\nThis cipher is in ADFGVX.\nUse \",\" again to decode it after\ncalibrating your decoding device.";
+    glasses=false;
+    t="";
+    decrypt=new String[0];
+    tick++;
   }
   if(menu){
     background(120,64,0);
@@ -47,6 +54,9 @@ void draw(){
     text("START GAME",280,360);
     if(win){
       text("Congratulations!",250,80);
+    }
+    if(superWin){
+      text("Wow!!",330,520);
     }
   }else if(desk){
     background=0;
@@ -113,6 +123,14 @@ void draw(){
     background(120,64,0);
     fill(229,222,207);
     rect(200,10,400,580);
+    if(adfGlassesOn){
+      decryptedPaper="Dear Mr. President,                                                   After the last letter had been compromised, we are using more secure encryptions to keep this note safe. We don't know how proficient this spy is, or who they are, so now we must assume thay will read this. We will talk soon about how to find this spy.";
+      fill(210,210,0);
+      rect(650,350,100,100);
+      fill(20);
+      textSize(13);
+      text("      ACTIVATE\nEJECTOR SEAT",660,390);
+    }
     textSize(20);
     fill(20);
     text(decryptedPaper,220,45,360,600);
@@ -157,8 +175,6 @@ void draw(){
       if(glassesIndex<RALP.length){
         text("Input the decrypted letter corresponding to: "+RALP[glassesIndex],400,50);
         text(t,400,100);
-      }else{
-        
       }
     }
     text("To decrypt a letter, find it on the inside of the wheel.\nThe letter on the outside wheel is the plaintext letter.",400,530);
@@ -235,6 +251,16 @@ void draw(){
         text(adfgvxCode.charAt((6*i)+j),268+50*j,150+60*i);
       }
     }
+    textSize(20);
+    text("Each letter is encoded\ninto a letter pair.\nThe first letter is the\nrow, and the second\nis the column\nin this grid.",15,100);
+    if(glasses){
+      if(!adfGlassesOn){
+        text("Input the decoded\nmessage for the code:\nVDAAF FGXDX GDGXF\nVFAVD VGDFF VFFFA\nXFDFG FDVDF FXAAV\nFAFVD AGVXX DXDAF\nXF",615,100);
+        text(t,615,300,170,1000);
+      }else{
+        text("Success!",615,100);
+      }
+    }
   }
 }
 
@@ -269,12 +295,21 @@ void mouseClicked(){
     }else if(mouseX<750&&mouseX>650&&mouseY>560&&mouseY<585){
       desk=false;
       rdrawer=true;
-    }else if(mouseX>100&&mouseX<200&&mouseY>100&&mouseY<250&&level==2){
+    }else if(mouseX>100&&mouseX<200&&mouseY>150&&mouseY<300&&level==2){
       adfgvx=true;
       desk=false;
     }
   }else if(zoom){
-    if(!Arrays.equals(decrypt,checkDecrypt)){
+    if(adfGlassesOn){
+      if(mouseX>650&&mouseX<750&&mouseY>350&&mouseY<450){
+        superWin=true;
+        zoom=false;
+        menu=true;
+      }else if(mouseX>600||mouseX<200){
+        zoom=false;
+        desk=true;
+      }
+    }else if(!Arrays.equals(decrypt,checkDecrypt)){
       if(mouseX>600||mouseX<200){
         zoom=false;
         desk=true;
@@ -334,13 +369,32 @@ void keyPressed(){
     }else if(key=='.'){
       glassesIndex=0;
       decrypt=new String[26];
-    }else if(!(key==ENTER||key==RETURN||key==SHIFT)&&glasses&&t.length()<1){
+    }else if(!(key==ENTER||key==RETURN||keyCode==SHIFT||key==DELETE||key==BACKSPACE)&&glasses&&t.length()<1&&glassesIndex<RALP.length){
       t+=key;
       decrypt[glassesIndex]=String.valueOf(key);
     }else if((key==ENTER||key==RETURN)&&glasses){
       t="";
       if(glassesIndex<RALP.length){
         glassesIndex++;
+      }
+    }else if((key==DELETE||key==BACKSPACE)&&glasses&&t.length()==1){
+      t="";
+    }
+  }else if(adfgvx){
+    if(key==','){
+      if(glasses){
+        glasses=false;
+      }else{
+        glasses=true;
+      }
+    }else if(!(key==ENTER||key==RETURN||keyCode==SHIFT||key==DELETE||key==BACKSPACE)&&glasses){
+      t+=key;
+    }else if((key==DELETE||key==BACKSPACE)&&glasses&&t.length()>0){
+      t=t.substring(0,t.length()-1);
+    }else if(key==ENTER||key==RETURN){
+      if(t.replaceAll("\\s","").toLowerCase().equals("theclockstrikesmidnightat1200am")){
+        t="";
+        adfGlassesOn=true;
       }
     }
   }

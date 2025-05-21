@@ -1,8 +1,10 @@
 import java.util.*;
 final String[] ALP = {"A","Z","Y","X","W","V","U","T","S","R","Q","P","O","N","M","L","K","J","I","H","G","F","E","D","C","B"};
 final String[] RALP = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+String[] checkDecrypt = {"j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","a","b","c","d","e","f","g","h","i"};
 String[] decrypt = new String[26];
 String t="";
+String note="Mr. President,\n\nThe paper is in Caesar code. Use the\ndecoder wheel and spin it so the\nsmall number is today's code. We \nexpect a response from you soon.\n\nTo decode the note quicker, press \",\"\nwhile looking at the wheel after\nyou've found the correct code.\n\nP.S. The code is the month and day\nof your inauguration speech";
 String paper="Uvri Di. Givjzuvek,                                                     Nv yrmv efkztvu jfdv ivgfikj fw vjgzferxv nzkyze kyv Nyzkv Yfljv, jf nv riv krbzex vokir givtrlkzfej sp vetipgkzex kyzj cvkkvi. Kyvjv riv czbvcp lewfleuvu svczvwj, slk zk zj r xffu jvtlizkp dvrjliv evmvikyvcvjj.";
 String decryptedPaper=paper;
 boolean menu=true;
@@ -12,25 +14,38 @@ boolean zoomWheel=false;
 boolean zoomNote=false;
 boolean rdrawer=false;
 boolean ldrawer=false;
+boolean adfgvx=false;
 boolean glasses=false;
 boolean wheelText=true;
+boolean hasClicked=false;
+boolean win=false;
 int spin=52;
 int background=250;
 int glassesIndex=0;
+int level=1;
 void setup(){
   size(800,600);
+  decrypt=checkDecrypt;
 }
 
 void draw(){
   background(background);
   textAlign(BASELINE);
+  if(level==2){
+    paper="lorem ipsum dolor sit amet";
+    decryptedPaper=paper;
+  }
   if(menu){
-    background=200;
-    fill(255);
+    background(120,64,0);
+    fill(229,222,207);
     rect(200,100,400,350,10);
     fill(0);
-    textSize(50);
-    text("Start",350,300);
+    textSize(45);
+    text("Dear Mr. President",230,200);
+    text("START GAME",280,360);
+    if(win){
+      text("Congratulations!",250,80);
+    }
   }else if(desk){
     background=0;
     //desk
@@ -50,15 +65,29 @@ void draw(){
     fill(20);
     text("~~~~~~~~~~~~,\n~~~~~~~~.~~~~~~~~~~~,~~~~~~~~~~.~~~~~\n~~~~~~~~~~~~~~~~,~~~~~~'~~~~~~.~~~~~~~~\n~~~~~~~~~~~~.~~~~~~~~~~~~~~.~~~~~~~~,\n~~~~.~~~~~~~~~~~~~~~~~,~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~'~~~~~~~~~~~~~~~~.~\n~~~~~~~~~~~~~~~~'~~~~~~~~~~~~~~~~\n~~~~~~~.~~~~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~,~~~~~~~~~~~,~~~~~~~~~~,~~~~\n~~~~~~~~~~~,~~~~~~~~~~~~~~~~~\n~~~~~~~.~~~~~~~~~~~~~~~~~~~~~~~~~,~~~~\n~~~~~~~~,~~~~~~~~~~~~~~~~~~~,~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~'~.~~~~~~~~~\n~~~~~~~~~~,~~~~~~~~~~.~~~~~~~~~~~.~~~\n~~~~~~~~,~~~~~~~~~~~~~~,~~~~~~~~~~~~~~\n~~~~~~~~~~.~~~~~~~~~~~~~~,~~~~~~~~~'~\n~~~~~~~~~~~~~~~,~~~~~~~~~~~~~,~~~~~~~~.",310,180);
     //wheel
-    fill(80);
-    circle(620,220,40);
-    circle(620,220,27);
+    if(level==1){
+      fill(80);
+      circle(620,220,40);
+      circle(620,220,27);
+    }else if(level==2){
+      fill(229,222,207);
+      rect(100,100,100,150);
+      fill(20);
+      line(130,110,130,170);
+      line(170,110,170,170);
+      line(110,130,190,130);
+      line(110,150,190,150);
+    }
     //postit
     fill(200,170,80);
     rect(610,300,50,50);
     //postit scribble
     fill(20);
     text("~~~,\n~~~.~~~\n~~~~~~.",615,315);
+    if(!hasClicked){
+      textSize(30);
+      text("Click around to read papers and use objects.",130,100);
+    }
 }else if(zoom){
     //decrypting
     if(glassesIndex>0){
@@ -85,6 +114,13 @@ void draw(){
     textSize(20);
     fill(20);
     text(decryptedPaper,220,45,360,600);
+    if(Arrays.equals(decrypt,checkDecrypt)){
+      fill(180,10,10);
+      circle(700,400,100);
+      fill(20);
+      textSize(13);
+      text("      ACTIVATE\nEJECTOR SEAT",660,390);
+    }
   }else if(zoomWheel){
     background(120,64,0);
     fill(100);
@@ -113,7 +149,7 @@ void draw(){
     }
     text(spin%26+1,400,270);
     text("Caesar Cipher\nWheel",400,320);
-    fill(250);
+    fill(20);
     if(glasses){
       textSize(20);
       if(glassesIndex<RALP.length){
@@ -125,10 +161,10 @@ void draw(){
     }
     text("To decrypt a letter, find it on the inside of the wheel.\nThe letter on the outside wheel is the plaintext letter.",400,530);
     if(wheelText){
-      text("Spin the wheel using the\nleft and right arrow keys",680,300);
+      text("Spin the wheel using the\nleft and right arrow keys.",680,300);
     }
     if(glassesIndex==26){
-      text("If you want to reset the\ndecoder, press \".\"",70,300);
+      text("If you want to reset the\ndecoder, press \".\"",120,300);
     }
   }else if(zoomNote){
     background(120,64,0);
@@ -136,9 +172,9 @@ void draw(){
     rect(200,100,400,400);
     fill(20);
     textSize(25);
-    text("Mr. President,\n\nThe paper is in Caesar code. Use the\ndecoder wheel and spin it so the\nsmall number is today's code. We \nexpect a response from you soon.\n\nTo decode the note quicker, press \",\"\nwhile looking at the wheel after\nyou've found the correct code.\n\nP.S. The code is the month and day\nof your inauguration speech",210,140);
+    text(note,210,140);
   }else if(ldrawer){
-    background(0);
+    background=0;
     fill(120,64,0);
     rect(0,0,800,170);
     rect(250,170,300,400);
@@ -152,9 +188,8 @@ void draw(){
     textSize(10);
     fill(20);
     text("~~~~~~~~~~~~.~~~~~~~~~~~~~~.~~~~~~~~,\n~~~~.~NEW PRESIDENT SWORN IN~~\n~~~~~~~~~~~~~~~'~~~~~~~~~~~~~~~~.~\n~~~~~~INAUGURATION SPEECH~~~~~~~~~~~\n~~~~~~~.January 8th~~~~~~~~~~~~\n~~~~~~~~~~~,~~~~~~~~~~~,~~~~~~~~~~,~~~~\n~~~~~~~~~~~,~~~~1966~~~~\n~~~~~~~.~~~~~~~~~~~~~~~~~~~~~~~~~,~~~~\n~~~~~~~~,~~~~~~~~~~~~~~~~~~~,~~~~~~~\n~~~~~~~~~~~~~~~~~~Cold War~~~~\n~~~~~~~~~~,~~~~~~~~~~.~~~~~~~~~~~.~~~\n~~~~~~~~,~~~~~~~~~~~~~~,~~~~~~~~~~~~~~\n~~~~~~~~~~.~~~~~SPIES EVERYWHERE~~,~~\n~~~~~~~~~~~~~~~,~~~~~~~~~~~~~,~~~~~~~~.",310,250);
-    
   }else if(rdrawer){
-    background(0);
+    background=0;
     fill(120,64,0);
     rect(0,0,800,170);
     rect(250,170,300,400);
@@ -169,6 +204,10 @@ void draw(){
     fill(20);
     textSize(15);
     text("PRESIDENTIAL\nVAULT",320,300);
+  }else if(adfgvx){
+    background(120,64,0);
+    fill(229,222,207);
+    rect(200,10,400,580);
   }
 }
 
@@ -177,13 +216,19 @@ void mouseClicked(){
     if(mouseX>200&&mouseX<600&&mouseY<450&&mouseY>100){
       desk=true;
       menu=false;
+      if(win){
+        level=2;
+      }
     }
   }else if(desk){
+    if(!hasClicked){
+      hasClicked=true;
+    }
     //click paper
     if(mouseX>300&&mouseX<500&&mouseY<450&&mouseY>150){
       desk=false;
       zoom=true;
-    }else if(mouseX>600&&mouseX<640&&mouseY>200&&mouseY<240){
+    }else if(mouseX>600&&mouseX<640&&mouseY>200&&mouseY<240&&level==1){
       //click wheel
       desk=false;
       zoomWheel=true;
@@ -197,12 +242,26 @@ void mouseClicked(){
     }else if(mouseX<750&&mouseX>650&&mouseY>560&&mouseY<585){
       desk=false;
       rdrawer=true;
+    }else if(mouseX>100&&mouseX<200&&mouseY>100&&mouseY<250&&level==2){
+      adfgvx=true;
+      desk=false;
     }
   }else if(zoom){
-    if(mouseX>600||mouseX<200){
-      zoom=false;
-      desk=true;
-    }
+    if(!Arrays.equals(decrypt,checkDecrypt)){
+      if(mouseX>600||mouseX<200){
+        zoom=false;
+        desk=true;
+      }
+    }else{
+      if(mouseX>600&&mouseX<800&&mouseY>300&&mouseY<500){
+        zoom=false;
+        win=true;
+        menu=true;
+      }else if(mouseX>600||mouseX<200){
+        zoom=false;
+        desk=true;
+      }
+    }  
   }else if(zoomWheel){
     if((mouseX>560||mouseX<240)||(mouseY>415||mouseY<185)){
       zoomWheel=false;
@@ -222,6 +281,11 @@ void mouseClicked(){
     if(mouseX>550||mouseX<250){
       rdrawer=false;
       desk=true;
+    }
+  }else if(adfgvx){
+    if(mouseX>600||mouseX<200){
+        zoom=false;
+        desk=true;
     }
   }
 }

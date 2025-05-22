@@ -30,6 +30,7 @@ int tick=0;
 void setup(){
   size(800,600);
   //decrypt=checkDecrypt; //debug line
+  //adfGlassesOn=true;
 }
 
 void draw(){
@@ -40,6 +41,7 @@ void draw(){
     decryptedPaper=paper;
     note="Mr. President,\n\nWe have reason to believe a spy\n broke in and read your last\nletter. They escaped using your\nemergency ejector seat, but we are\ndetermined to track them down.\n\nThis cipher is in ADFGVX.\nUse \",\" again to decode it after\ncalibrating your decoding device.";
     glasses=false;
+    glassesIndex=0;
     t="";
     decrypt=new String[0];
     tick++;

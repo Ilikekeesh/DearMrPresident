@@ -8,6 +8,7 @@ String note="Mr. President,\n\nThe paper is in Caesar code. Use the\ndecoder whe
 String paper="Uvri Di. Givjzuvek,                                                     Nv yrmv efkztvu jfdv ivgfikj fw vjgzferxv nzkyze kyv Nyzkv Yfljv, jf nv riv krbzex vokir givtrlkzfej sp vetipgkzex kyzj cvkkvi. Kyvjv riv czbvcp lewfleuvu svczvwj, slk zk zj r xffu jvtlizkp dvrjliv evmvikyvcvjj.";
 String adfgvxCode="h8a1pyf6i9nlswe5kg7od4uc3tvrb2j0mqxz";
 String decryptedPaper=paper;
+String finalCode="";
 boolean menu=true;
 boolean desk=false;
 boolean zoom=false;
@@ -22,6 +23,7 @@ boolean wheelText=true;
 boolean hasClicked=false;
 boolean win=false;
 boolean superWin=false;
+boolean triplewin=false;
 int spin=52;
 int background=250;
 int glassesIndex=0;
@@ -54,11 +56,12 @@ void draw(){
     textSize(45);
     text("Dear Mr. President",230,200);
     text("START GAME",280,360);
-    if(win){
-      text("Congratulations!",250,80);
-    }
-    if(superWin){
-      text("Wow!!",330,520);
+    if(triplewin){
+      text("Secret Level Complete!",190,80);
+    }else if(superWin){
+      text("Level 2 Complete!",250,80);
+    }else if(win){
+      text("Level 1 Complete!",250,80);
     }
   }else if(desk){
     background=0;
@@ -130,8 +133,8 @@ void draw(){
       fill(210,210,0);
       rect(650,350,100,100);
       fill(20);
-      textSize(13);
-      text("      ACTIVATE\nEJECTOR SEAT",660,390);
+      textSize(12);
+      text("         ACTIVATE\nSECRET TRAPDOOR",653,390);
     }
     textSize(20);
     fill(20);
@@ -224,6 +227,9 @@ void draw(){
     fill(20);
     textSize(15);
     text("PRESIDENTIAL\nVAULT",320,300);
+    text(finalCode,430,340);
+    textSize(30);
+    text("The code is a 4 digit number.",230,100);
   }else if(adfgvx){
     //h8a1pyf6i9nlswe5kg7od4uc3tvrb2j0mqxz
     background(120,64,0);
@@ -254,11 +260,13 @@ void draw(){
       }
     }
     textSize(20);
-    text("Each letter is encoded\ninto a letter pair.\nThe first letter is the\nrow, and the second\nis the column\nin this grid.",15,100);
+    text("Each letter is encoded\ninto a letter pair.\nThe first letter is the\nrow, and the second\nis the column\nin this grid.\n(spaces are ignored)",15,100);
     if(glasses){
       if(!adfGlassesOn){
         text("Input the decoded\nmessage for the code:\nVDAAF FGXDX GDGXF\nVFAVD VGDFF VFFFA\nXFDFG FDVDF FXAAV\nFAFVD AGVXX DXDAF\nXF",615,100);
         text(t,615,300,170,1000);
+        //fill(200,0,0);
+        //line(610+t.length()*20,120,630+t.length()*20,120);
       }else{
         text("Success!",615,100);
       }
@@ -348,8 +356,8 @@ void mouseClicked(){
     }
   }else if(adfgvx){
     if(mouseX>600||mouseX<200){
-        zoom=false;
-        desk=true;
+      adfgvx=false;
+      desk=true;
     }
   }
 }
@@ -397,6 +405,18 @@ void keyPressed(){
       if(t.replaceAll("\\s","").toLowerCase().equals("theclockstrikesmidnightat1200am")){
         t="";
         adfGlassesOn=true;
+      }
+    }
+  }else if(rdrawer){
+    if(!(key==ENTER||key==RETURN||keyCode==SHIFT||key==DELETE||key==BACKSPACE)){
+      finalCode+=key;
+    }else if((key==DELETE||key==BACKSPACE)&&finalCode.length()>0){
+      finalCode=finalCode.substring(0,finalCode.length()-1);
+    }else if(key==ENTER||key==RETURN){
+      if(finalCode.equals("1812")){
+        rdrawer=false;
+        menu=true;
+        triplewin=true;
       }
     }
   }
